@@ -1,0 +1,336 @@
+index.html<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ilham - أسئلة خاصة ❤️</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a0033 50%, #2d1b69 100%);
+    color: white;
+    direction: rtl;
+    height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(255,77,136,0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255,105,180,0.3) 0%, transparent 50%);
+    animation: bgShift 15s ease-in-out infinite;
+}
+
+@keyframes bgShift {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.container {
+    position: relative;
+    z-index: 20;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title {
+    font-size: clamp(28px, 8vw, 48px);
+    background: linear-gradient(45deg, #ff69b4, #ff4d88, #ffb6c1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 40px;
+    animation: glowTitle 3s ease-in-out infinite alternate;
+    text-shadow: 0 0 30px rgba(255,105,180,0.5);
+}
+
+@keyframes glowTitle {
+    from { filter: drop-shadow(0 0 20px #ff69b4); }
+    to { filter: drop-shadow(0 0 40px #ff4d88); }
+}
+
+.question {
+    font-size: clamp(20px, 5vw, 32px);
+    color: #ffb6c1;
+    margin-bottom: 50px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1s ease-out;
+    text-shadow: 0 0 15px rgba(255,182,193,0.5);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.answers {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+button {
+    padding: 20px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: clamp(16px, 4vw, 22px);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.btn-correct {
+    background: linear-gradient(45deg, #ff4d88, #ff69b4);
+    color: white;
+    box-shadow: 0 15px 35px rgba(255,77,136,0.4);
+}
+
+.btn-correct:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 25px 50px rgba(255,77,136,0.6);
+}
+
+.btn-wrong {
+    background: linear-gradient(45deg, #666, #888);
+    color: white;
+    box-shadow: 0 15px 35px rgba(100,100,100,0.3);
+}
+
+.btn-wrong:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 25px 50px rgba(100,100,100,0.5);
+}
+
+.progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #ff69b4, #ff4d88);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    z-index: 30;
+}
+
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 18px;
+    background: #ff69b4;
+    transform: rotate(-45deg);
+    animation: floatUp 6s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.heart:before,
+.heart:after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    background: #ff69b4;
+    border-radius: 50px 50px 0 0;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+}
+
+.heart:after { left: 10px; }
+.heart:before { left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
+
+@keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg) scale(0); opacity: 0; }
+    10% { opacity: 1; scale(1); }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) rotate(1080deg) scale(0); opacity: 0; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-12px); }
+    75% { transform: translateX(12px); }
+}
+
+.result {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(24px, 6vw, 36px);
+    padding: 40px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255,105,180,0.3);
+    opacity: 0;
+    animation: resultPop 0.6s forwards;
+}
+
+@keyframes resultPop {
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+</style>
+</head>
+
+<body>
+<div class="progress" id="progress"></div>
+
+<div class="container">
+    <h1 class="title">Ilham ❤️</h1>
+    
+    <div class="question" id="question">السؤال الأول جاي...</div>
+    
+    <div class="answers" id="answers"></div>
+</div>
+
+<script>
+// الأسئلة الرومانسية 😍
+const أسئلة = [
+    {
+        سؤال: "💕 شكون كيبغيك بزاف بزاف؟",
+        خيارات: [
+            { نص: "أنا طبعاً ❤️", صح: true },
+            { نص: "شي واحد آخر 🤔", صح: false }
+        ]
+    },
+    {
+        سؤال: "😘 كي فكرتي فالحب، شكون الأول؟",
+        خيارات: [
+            { نص: "أنا دايماً في بالك 💖", صح: true },
+            { نص: "صديقاتي أولاً 👯‍♀️", صح: false }
+        ]
+    },
+    {
+        سؤال: "🌙 آخر شي حلمتي بيه؟",
+        خيارات: [
+            { نص: "بيا أنا 😏", صح: true },
+            { نص: "بالامتحانات 📚", صح: false }
+        ]
+    },
+    {
+        سؤال: "💋 شكون كتعطيه قبلة كل يوم؟",
+        خيارات: [
+            { نص: "أنا في خيالك 😘", صح: true },
+            { نص: "المرآة 😂", صح: false }
+        ]
+    },
+    {
+        سؤال: "❤️ قلبك كيقول شكون؟",
+        خيارات: [
+            { نص: "أنا أنا أنا! 💓", صح: true },
+            { نص: "محدش خاص 😏", صح: false }
+        ]
+    }
+];
+
+let سؤالحالي = 0;
+let نقاط = 0;
+
+// قلوب مستمرة خفيفة
+setInterval(() => {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.background = ['#ff69b4', '#ff4d88', '#ffb6c1'][Math.floor(Math.random()*3)];
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+}, 800);
+
+function تحديثالسؤال() {
+    if(سؤالحالي >= أسئلة.length) {
+        نهايةاللعبة();
+        return;
+    }
+    
+    document.getElementById('question').textContent = أسئلة[سؤالحالي].سؤال;
+    document.getElementById('progress').style.transform = `scaleX(${(سؤالحالي+1)/أسئلة.length})`;
+    
+    const answersDiv = document.getElementById('answers');
+    answersDiv.innerHTML = '';
+    
+    أسئلة[سؤالحالي].خيارات.forEach((خيار, index) => {
+        const btn = document.createElement('button');
+        btn.className = خيار.صح ? 'btn-correct' : 'btn-wrong';
+        btn.textContent = خيار.نص;
+        btn.onclick = () => اختيار(خيار.صح, index);
+        answersDiv.appendChild(btn);
+    });
+}
+
+function اختيار(صح, index) {
+    const btns = document.querySelectorAll('.answers button');
+    btns.forEach((b, i) => {
+        if(i === index) {
+            if(صح) {
+                نقاط++;
+                b.style.animation = 'pulse 0.6s infinite';
+                // انفجار قلوب!
+                for(let i = 0; i < 30; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.className = 'heart';
+                        heart.style.left = (50 + (Math.random()-0.5)*100) + 'vw';
+                        heart.style.background = '#ff4d88';
+                        document.body.appendChild(heart);
+                        setTimeout(() => heart.remove(), 4000);
+                    }, i*50);
+                }
+            } else {
+                b.style.animation = 'shake 0.6s';
+            }
+        }
+    });
+    
+    setTimeout(() => {
+        سؤالحالي++;
+        تحديثالسؤال();
+    }, 1500);
+}
+
+function نهايةاللعبة() {
+    const container = document.querySelector('.container');
+    container.innerHTML = `
+        <div class="result">
+            <h2 style="font-size: 2.5em; margin-bottom: 20px;">🎉 نهاية اللعبة! 🎉</h2>
+            <p style="font-size: 1.5em; margin-bottom: 30px;">
+                ${نقاط === 5 ? '😍 كلشي صح! كنبغيك بزاف Ilham ❤️' : 
+                  نقاط >= 3 ? '💖 مزيان بزاف! كنبغيك ❤️' : 
+                  '😏 راه مازال كتعرفيني مزيان 😉'}
+            </p>
+            <button onclick="location.reload()" style="
+                padding: 20px 40px; font-size: 20px; 
+                background: linear-gradient(45deg, #ff4d88, #ff69b4);
+                color: white; border-radius: 30px; border: none;
+                box-shadow: 0 15px 35px rgba(255,77,136,0.5);
+            ">🔄 العب مرة أخرى</button>
+        </div>
+    `;
+}
+
+// ابدأ اللعبة
+setTimeout(تحديثالسؤال, 1000);
+</script>
+</body>
+  </html>
